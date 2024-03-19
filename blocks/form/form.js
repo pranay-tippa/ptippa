@@ -121,6 +121,16 @@ const createSelect = withFieldWrapper((fd) => {
   return select;
 });
 
+function createHeading(fd) {
+  const wrapper = createFieldWrapper(fd);
+  const heading = document.createElement('h2');
+  heading.textContent = fd.value || fd.label.value;
+  heading.id = fd.id;
+  wrapper.append(heading);
+
+  return wrapper;
+}
+
 function createRadioOrCheckbox(fd) {
   const wrapper = createFieldWrapper(fd);
   const input = createInput(fd);
@@ -230,6 +240,7 @@ const fieldRenderers = {
   'radio-group': createRadioOrCheckboxGroup,
   'checkbox-group': createRadioOrCheckboxGroup,
   image: createImage,
+  heading: createHeading,
 };
 
 async function fetchForm(pathname) {
@@ -273,7 +284,7 @@ function inputDecorator(field, element) {
       input.disabled = true;
     }
     const fieldType = getHTMLRenderType(field);
-    if (['number', 'date'].includes(fieldType) && field.displayFormat !== undefined) {
+    if (['number', 'date'].includes(fieldType) && (field.displayFormat || field.displayValueExpression)) {
       field.type = fieldType;
       input.setAttribute('edit-value', field.value ?? '');
       input.setAttribute('display-value', field.displayValue ?? '');
@@ -340,7 +351,7 @@ export async function generateFormRendition(panel, container) {
     } else {
       const element = renderField(field);
       if (field.appliedCssClassNames) {
-        element.className += ` col-${field.appliedCssClassNames}`;
+        element.className += ` ${field.appliedCssClassNames}`;
       }
       colSpanDecorator(field, element);
       const decorator = await componentDecorater(field);
@@ -386,6 +397,9 @@ export async function createForm(formDef, data) {
   const form = document.createElement('form');
   form.dataset.action = formPath;
   form.noValidate = true;
+  if (formDef.appliedCssClassNames) {
+    form.className = formDef.appliedCssClassNames;
+  }
   await generateFormRendition(formDef, form);
 
   let captcha;
@@ -454,6 +468,8 @@ export default async function decorate(block) {
         form = await afModule.initAdaptiveForm(formDef, createForm);
       }
     }
+    form.dataset.redirectUrl = formDef.redirectUrl || '';
+    form.dataset.thankYouMsg = formDef.thankYouMsg || '';
     form.dataset.action = formDef.action || pathname?.split('.json')[0];
     form.dataset.source = source;
     form.dataset.rules = rules;
