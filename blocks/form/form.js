@@ -82,7 +82,7 @@ const createSelect = withFieldWrapper((fd) => {
 
   const addOption = (label, value) => {
     const option = document.createElement('option');
-    option.textContent = label?.trim();
+    option.textContent = label instanceof Object ? label?.value?.trim() : label?.trim();
     option.value = value?.trim() || label?.trim();
     if (fd.value === option.value || (Array.isArray(fd.value) && fd.value.includes(option.value))) {
       option.setAttribute('selected', '');
@@ -284,7 +284,7 @@ function inputDecorator(field, element) {
       input.disabled = true;
     }
     const fieldType = getHTMLRenderType(field);
-    if (['number', 'date'].includes(fieldType) && (field.displayFormat || field.displayValueExpression)) {
+    if (['number', 'date', 'text', 'email'].includes(fieldType) && (field.displayFormat || field.displayValueExpression)) {
       field.type = fieldType;
       input.setAttribute('edit-value', field.value ?? '');
       input.setAttribute('display-value', field.displayValue ?? '');
@@ -384,11 +384,7 @@ function enableValidation(form) {
   });
 
   form.addEventListener('change', (event) => {
-    const { validity } = event.target;
-    if (validity.valid) {
-      // only to remove the error message
-      checkValidation(event.target);
-    }
+    checkValidation(event.target);
   });
 }
 

@@ -10,7 +10,7 @@ export const defaultErrorMessages = {
   minItems: 'Specify a number of items equal to or greater than $0.',
 };
 
-let submitBaseUrl = 'https://publish-p10652-e203356-cmstg.adobeaemcloud.com';
+let submitBaseUrl = '';
 
 export function setSubmitBaseUrl(url) {
   submitBaseUrl = url;
