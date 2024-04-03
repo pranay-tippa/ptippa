@@ -10,7 +10,7 @@ export const defaultErrorMessages = {
   minItems: 'Specify a number of items equal to or greater than $0.',
 };
 
-let submitBaseUrl = '';
+let submitBaseUrl = 'http://localhost:4502';
 
 export function setSubmitBaseUrl(url) {
   submitBaseUrl = url;
