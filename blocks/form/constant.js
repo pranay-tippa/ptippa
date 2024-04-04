@@ -10,7 +10,10 @@ export const defaultErrorMessages = {
   minItems: 'Specify a number of items equal to or greater than $0.',
 };
 
-let submitBaseUrl = 'http://localhost:4502';
+// eslint-disable-next-line no-useless-escape
+export const emailPattern = '([A-Za-z0-9][._]?)+[A-Za-z0-9]@[A-Za-z0-9]+(\.?[A-Za-z0-9]){2}\.([A-Za-z0-9]{2,4})?';
+
+let submitBaseUrl = '';
 
 export function setSubmitBaseUrl(url) {
   submitBaseUrl = url;
