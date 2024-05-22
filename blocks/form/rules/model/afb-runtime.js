@@ -2625,23 +2625,8 @@ class FunctionRuntimeImpl {
                                 },
                                 submitForm: (payload, validateForm, contentType) => {
                                     const submitAs = contentType || 'multipart/form-data';
-                                    const args = [payload, validateForm, submitAs];
+                                    const args = ['custom:submitSuccess', 'custom:submitError', submitAs, payload, validateForm];
                                     return FunctionRuntimeImpl.getInstance().getFunctions().submitForm._func.call(undefined, args, data, interpreter);
-                                },
-                                markFieldAsInvalid: (fieldIdentifier, validationMessage, option) => {
-                                    if (!option || option.useId) {
-                                        interpreter.globals.form.getElement(fieldIdentifier)?.markAsInvalid(validationMessage);
-                                    }
-                                    else if (option && option.useDataRef) {
-                                        interpreter.globals.form.visit(function callback(f) {
-                                            if (f.dataRef === fieldIdentifier) {
-                                                f.markAsInvalid(validationMessage);
-                                            }
-                                        });
-                                    }
-                                    else if (option && option.useQualifiedName) {
-                                        interpreter.globals.form.resolveQualifiedName(fieldIdentifier)?.markAsInvalid(validationMessage);
-                                    }
                                 }
                             }
                         };
@@ -2743,8 +2728,8 @@ class FunctionRuntimeImpl {
             },
             submitForm: {
                 _func: (args, data, interpreter) => {
-                    let success = null;
-                    let error = null;
+                    let success = 'custom:submitSuccess';
+                    let error = 'custom:submitError';
                     let submit_data;
                     let validate_form;
                     let submit_as;
