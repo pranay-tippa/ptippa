@@ -2,4 +2,4 @@ mountpoints:
   /:
     url: https://author-p10652-e203356-cmstg.adobeaemcloud.com/bin/franklin.delivery/pranay-tippa/ptippa/main
     type: "markup"
-    suffix: ".md.html?wcmmode=disabled"
+    suffix: ".html"
